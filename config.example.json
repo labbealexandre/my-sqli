@@ -1,0 +1,5 @@
+{
+  "MAX_LENGTH": 256,
+  "DEBUG": false,
+  "PROXY": "http://localhost:56789"
+}
